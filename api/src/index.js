@@ -1,12 +1,32 @@
+const KeycloakBearerStrategy = require('passport-keycloak-bearer');
 const express = require('express');
 const http = require('http');
 const path = require('path');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const cors = require('cors');
+const passport = require('passport');
+
 
 const app = express();
 app.use(cors());
+
+const keycloakServerUrl = process.env.KEYCLOAK_SERVER_URL || 'http://localhost/keycloak/';
+const options = {
+  realm: 'student-chatbot',
+  url: keycloakServerUrl,
+  name: 'keycloak',
+};
+
+const keycloakStrategy = new KeycloakBearerStrategy(options, (jwtPayload, done) => {
+  // console.log('STANDARD ----------------->>>>> ss ');
+  // console.log(jwtPayload);
+  const user = {
+    username: jwtPayload.preferred_username,
+    groups: jwtPayload.student-chatbot_groups,
+  };
+  return done(null, user);
+});
 
 
 const port = process.env.PORT || 3010;
@@ -28,6 +48,9 @@ app.use(function cors(req, res, next) {
   res.set('Vary', 'Origin');
   next();
 });
+
+app.use(passport.initialize());
+passport.use(keycloakStrategy);
 
 app.use('/messages', require('./messages/router'));
 

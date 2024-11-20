@@ -9,19 +9,33 @@ import About from './pages/About';
 import Services from './pages/Services';
 import Contact from './pages/Contact';
 import History from './pages/History';
+import { Login } from './components/Login';
+import { Redirect } from './components/Redirect.js';
+import { ProtectedRoute } from './components/ProtectedRoute';
+
+
 
 import './App.css';
+import { authInstance } from './index.js';
 
-function App() {
+function App({authenticated}) {
   return (
     <Router>
       <Header />
       <Routes>
-        <Route path="/" element={<Main></Main>} />
-        <Route path="/message-history" element={<History/>} />
-        <Route path="/about" element={<About />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/redirect" element={<Redirect />} />
+        <Route path="/" element={
+          <ProtectedRoute element={
+                <Main authInstance={authInstance.idTokenParsed}></Main>
+            } 
+          />
+          } 
+        />
+        <Route path="/message-history" element={<ProtectedRoute element={History} />} />
+        <Route path="/about" element={<ProtectedRoute element={About} />} />
+        <Route path="/services" element={<ProtectedRoute element={Services} />} />
+        <Route path="/contact" element={<ProtectedRoute element={Contact} />} />
       </Routes>
       <Footer />
     </Router>

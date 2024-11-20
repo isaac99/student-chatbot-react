@@ -1,0 +1,105 @@
+{
+    "realm": "student-chatbot",
+    "enabled": true,
+    "clients": [
+      {
+        "clientId": "student-chatbot",
+        "enabled": true,
+        "publicClient": true,
+        "directAccessGrantsEnabled": true,
+        "redirectUris": [
+          "http://localhost:3000/*",
+          "http://localhost/*"
+        ],
+        "webOrigins": [
+          "http://localhost:3000",
+          "http://localhost"
+        ],
+        "protocolMappers": [
+        ]
+      }
+    ],
+    "identityProviders": [],
+    "users": [
+      {
+        "username": "justin",
+        "enabled": true,
+        "email": "",
+        "firstName": "justin",
+        "lastName": "g",
+        "credentials": [
+          {
+            "type": "password",
+            "value": "justin"
+          }
+        ],
+        "realmRoles": ["user", "offline_access"],
+        "clientRoles": {
+          "account": ["manage-account"]
+        },
+        "groups": ["/teacher", "/admin", "/student"]
+      },
+      {
+        "username": "admin",
+        "enabled": true,
+        "email": "",
+        "firstName": "Admin",
+        "lastName": "Person",
+        "credentials": [
+          {
+            "type": "password",
+            "value": "admin"
+          }
+        ],
+        "realmRoles": ["user", "admin", "teacher"],
+        "clientRoles": {
+          "realm-management": ["realm-admin"],
+          "account": ["manage-account"]
+        },
+        "groups": ["/teacher", "/student", "/admin"]
+      }
+    ],
+    "roles": {
+      "realm": [
+        {
+          "name": "teacher",
+          "description": "Teacher privileges"
+        },
+        {
+          "name": "user",
+          "description": "User privileges"
+        },
+        {
+          "name": "admin",
+          "description": "Administrator privileges"
+        }
+      ]
+    },
+    "groups": [
+      {
+        "name": "teacher",
+        "path": "/teacher",
+        "subGroups": [],
+        "attributes": {},
+        "realmRoles": [],
+        "clientRoles": {}
+      },
+      {
+        "name": "student",
+        "path": "/student",
+        "subGroups": [],
+        "attributes": {},
+        "realmRoles": [],
+        "clientRoles": {}
+      },
+      {
+        "name": "admin",
+        "path": "/admin",
+        "subGroups": [],
+        "attributes": {},
+        "realmRoles": [],
+        "clientRoles": {}
+      }
+    ]
+  }
+  

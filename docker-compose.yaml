@@ -21,20 +21,19 @@ services:
     # Don't need to wait 60 seconds before starting cassandra these days
     # command: bash -c 'sleep 60;  /usr/local/bin/docker-entrypoint.sh cassandra -f'
 
-  # nginx:
-  #   ports:
-  #     - '80:80'
-  #   build:
-  #     context: ./nginx
-  #     dockerfile: Dockerfile
-  #   restart: on-failure
-  #   container_name: proxy
-  #   volumes:
-  #     - /var/run/docker.sock:/tmp/docker.sock:ro
-    # depends_on:
-    #   - api
-    #   - et-rabbitmq
-    #   - keycloak
+  nginx:
+    ports:
+      - '80:80'
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    restart: on-failure
+    container_name: reverse-proxy
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    depends_on:
+      - student-api
+      - keycloak
 
   student-api:
     build:
@@ -62,27 +61,27 @@ services:
   #   ports:
   #     - '11111:11111'
 
-  # keycloak:
-  #   image: quay.io/keycloak/keycloak:24.0.3
-  #   container_name: keycloak
-  #   environment:
-  #     - KC_HOSTNAME_PORT=8080
-  #     - KC_HOSTNAME_STRICT=false
-  #     - KC_HOSTNAME_STRICT_HTTPS=false
-  #     - KC_LOG_LEVEL=info
-  #     - KC_METRICS_ENABLED=true
-  #     - KC_HEALTH_ENABLED=true
-  #     - KEYCLOAK_ADMIN=admin
-  #     - KEYCLOAK_ADMIN_PASSWORD=admin
-  #     - VIRTUAL_PATH=/keycloak/
-  #     - VIRTUAL_PORT=8080
-  #     - KC_PROXY_HEADERS=xforwarded
-  #     - KC_HOSTNAME_URL=http://localhost/keycloak/
-  #     - KC_HOSTNAME_ADMIN_URL=http://localhost/keycloak/
-  #   volumes:
-  #     - ./keycloak_data:/opt/keycloak/data
-  #   command: start-dev --import-realm
-  #   ports:
-  #     - 8080:8080
-  #   expose:
-  #     - '8080'
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.3
+    container_name: login-system
+    environment:
+      - KC_HOSTNAME_PORT=8080
+      - KC_HOSTNAME_STRICT=false
+      - KC_HOSTNAME_STRICT_HTTPS=false
+      - KC_LOG_LEVEL=info
+      - KC_METRICS_ENABLED=true
+      - KC_HEALTH_ENABLED=true
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - VIRTUAL_PATH=/keycloak/
+      - VIRTUAL_PORT=8080
+      - KC_PROXY_HEADERS=xforwarded
+      - KC_HOSTNAME_URL=http://localhost/keycloak/
+      - KC_HOSTNAME_ADMIN_URL=http://localhost/keycloak/
+    volumes:
+      - ./keycloak_data:/opt/keycloak/data
+    command: start-dev --import-realm
+    ports:
+      - 8080:8080
+    expose:
+      - '8080'

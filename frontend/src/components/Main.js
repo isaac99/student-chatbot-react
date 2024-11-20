@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 
-const Main = () => {
+const Main = ({authInstance}) => {
   const [messages, setMessages] = useState([]); // State to hold messages
   const [input, setInput] = useState(''); // State for the chat input
 
   const apiLink = 'http://localhost:3010';
   // Handle message submission
   const handleSend = async () => {
-    const result = await axios.post(`${apiLink}/messages/save-message`, { messageText: input, teacherId: 1, studentName: 'Justin Jr.' });
+    console.log(authInstance);
+    const teacherId = authInstance.sub;
+    const result = await axios.post(`${apiLink}/messages/save-message`, { messageText: input, teacherId: teacherId, studentName: 'Justin Jr.' });
 
     console.log(result);
     if (input !== '') {
