@@ -9,14 +9,12 @@ const Main = () => {
   const apiLink = 'http://localhost:3010';
   // Handle message submission
   const handleSend = async () => {
+    const result = await axios.post(`${apiLink}/messages/save-message`, { messageText: input, teacherId: 1, studentName: 'Justin Jr.' });
+    console.log('result: ', result);
     if (input.trim()) {
       setMessages([...messages, input]); // Add the input to messages
       setInput(''); // Clear the input field
     }
-
-    const answer = await axios.get(`${apiLink}/database/stuff`);
-
-    console.log(answer.data.response);
   };
 
   return (

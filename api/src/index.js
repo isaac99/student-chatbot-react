@@ -29,7 +29,7 @@ app.use(function cors(req, res, next) {
   next();
 });
 
-app.use('/database', require('./database/router'));
+app.use('/messages', require('./messages/router'));
 
 const server = http.Server(app);
 
