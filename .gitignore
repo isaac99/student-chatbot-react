@@ -1,1 +1,2 @@
 postgres_data/*
+api/node_modules/*
