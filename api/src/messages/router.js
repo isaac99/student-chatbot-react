@@ -18,6 +18,7 @@ router.post('/save-message', jsonParser, async function (req, res) {
   console.log('teacherId: ', teacherId);
   console.log('studentName: ', studentName);
   const response = await saveMessageToDb(messageText, teacherId, studentName);
+  res.json({ response: response });
 
 });
 
