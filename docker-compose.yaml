@@ -1,0 +1,133 @@
+services:
+  postgres1:
+    container_name: postgres1
+    restart: always
+    env_file: .env
+    image: postgres:12.21
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    # environment:
+    #   - CASSANDRA_START_RPC=false
+    #   - CASSANDRA_CLUSTER_NAME=cassandraCluster
+    #   - CASSANDRA_ENDPOINT_SNITCH=SimpleSnitch
+    #   - CASSANDRA_DC=datacenter1
+    # Don't need to wait 60 seconds before starting cassandra these days
+    # command: bash -c 'sleep 60;  /usr/local/bin/docker-entrypoint.sh cassandra -f'
+
+  # nginx:
+  #   ports:
+  #     - '80:80'
+  #   build:
+  #     context: ./nginx
+  #     dockerfile: Dockerfile
+  #   restart: on-failure
+  #   container_name: proxy
+  #   volumes:
+  #     - /var/run/docker.sock:/tmp/docker.sock:ro
+    # depends_on:
+    #   - api
+    #   - et-rabbitmq
+    #   - keycloak
+
+  # api:
+  #   build:
+  #     context: ./api
+  #     dockerfile: Dockerfile
+  #   command: ['yarn', 'start']
+  #   container_name: api
+  #   depends_on:
+  #     - postgres1
+  #   volumes:
+  #     - ./config:/usr/src/app/config
+  #   environment:
+  #     - KAIROS_RBMQ_IP=et-rabbitmq:15675
+  #     - KAIROS_RBMQ_API_USERNAME=et-admin
+  #     - KAIROS_RBMQ_API_PW=rbmq2021
+  #     - KAIROS_RBMQ_API_TOPIC
+  #     - COSMOS_CONTACT_POINT
+  #     - COSMOS_USERNAME
+  #     - COSMOS_PW
+  #     - COSMOS_PORT
+  #     - CASSANDRA_TABLE
+  #     - VIRTUAL_PATH=/api/
+  #     #NOTE: this should be a comma seperated list of the contact points (cassandra1,cassandra2) without brackets
+  #     - CASSANDRA_CLUSTER_ADDRESSES_POOL='cassandra1'
+  #     - FEATURE_FLAGS_TIMELINE_REWIND_HOURS
+  #     - FEATURE_FLAGS_TIMELINE_ENABLED
+  #     - FEATURE_FLAGS_EXCEED_COST=0.05
+  #     - FEATURE_FLAGS_MIN_P=0.01
+  #     - KAIROS_RBMQ_BROKER_URL=amqp://et-rabbitmq/kairos-host
+  #     - KAIROS_RBMQ_BROKER_USERNAME=et-admin
+  #     - KAIROS_RBMQ_BROKER_PASSWORD=rbmq2021
+  #     - KAIROS_RBMQ_CONFIG_KEY=stream.config
+  #     - KAIROS_RBMQ_MODEL_KEY=stream.metamodel
+  #     - KAIROS_RBMQ_EQUIPMENT_KEY=stream.equipment
+  #     - FEATURE_FLAGS_COUNTERACTIONS=true
+  #     - FEATURE_FLAGS_PREVENTIONS=true
+  #     - KAIROS_RBMQ_AMQ_EXCHANGE=amq.topic
+  #     - KAIROS_RBMQ_EXCHANGE=lvc.topic
+  #     - KAIROS_RBMQ_EXCHANGE_TYPE=x-lvc
+  #     - KAIROS_API_ROUTING_KEY=kairos-cra:reasoning
+  #     - ENABLE_AUTH=true
+  #     - API_VERSION_TAG=DEVELOPMENT
+  #     - VERSION_TAG_CASSANDRA
+  #     - VERSION_TAG_RABBITMQ
+  #     - VERSION_TAG_OPC_EVALUATOR
+  #     - VERSION_TAG_WRITER
+  #     - VERSION_TAG_REASONING_ENGINE
+  #     - VERSION_TAG_CMRS
+  #     - VERSION_TAG_MODEL_ADAPTOR
+  #     - VERSION_TAG_MODEL_VALIDATOR
+  #     - VERSION_TAG_CONFIGURATOR
+  #     - VERSION_TAG_SIM_TOOL
+  #     - VERSION_CLIENT_API
+  #     - CORS_ORIGIN
+  #     - FEATURE_FLAGS_TIMELINE_REWIND_HOURS=72
+  #     - FEATURE_FLAGS_CENTER_PILLS_AMOUNT=1
+  #     - HELPFUL_LINK_TEXT_1=Kairos Tech1
+  #     - HELPFUL_LINK_URL_1=https://www.kairostech1.com
+  #     - HELPFUL_LINK_TEXT_2=Kairos Tech2
+  #     - HELPFUL_LINK_URL_2=https://www.kairostech2.com
+  #     - HELPFUL_LINK_TEXT_3=Kairos Tech3
+  #     - HELPFUL_LINK_URL_3=https://www.kairostech3.com
+  #     - KEYCLOAK_SERVER_URL=http://keycloak:8080
+    # ports:
+    #   - '3010:3010'
+
+  # kt-configurator:
+  #   image: kairostech.azurecr.io/kt-configurator:${VERSION_TAG_CONFIGURATOR}
+  #   container_name: configurator
+  #   restart: always
+  #   environment:
+  #     - REACT_APP_API_DEV=true
+  #     - VIRTUAL_PATH=/configurator/
+  #     - VIRTUAL_PORT=11111
+  #   ports:
+  #     - '11111:11111'
+
+  # keycloak:
+  #   image: quay.io/keycloak/keycloak:24.0.3
+  #   container_name: keycloak
+  #   environment:
+  #     - KC_HOSTNAME_PORT=8080
+  #     - KC_HOSTNAME_STRICT=false
+  #     - KC_HOSTNAME_STRICT_HTTPS=false
+  #     - KC_LOG_LEVEL=info
+  #     - KC_METRICS_ENABLED=true
+  #     - KC_HEALTH_ENABLED=true
+  #     - KEYCLOAK_ADMIN=admin
+  #     - KEYCLOAK_ADMIN_PASSWORD=admin
+  #     - VIRTUAL_PATH=/keycloak/
+  #     - VIRTUAL_PORT=8080
+  #     - KC_PROXY_HEADERS=xforwarded
+  #     - KC_HOSTNAME_URL=http://localhost/keycloak/
+  #     - KC_HOSTNAME_ADMIN_URL=http://localhost/keycloak/
+  #   volumes:
+  #     - ./keycloak_data:/opt/keycloak/data
+  #   command: start-dev --import-realm
+  #   ports:
+  #     - 8080:8080
+  #   expose:
+  #     - '8080'
